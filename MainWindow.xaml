@@ -41,7 +41,12 @@
         <Grid x:Name="DockRightGrid" DockPanel.Dock="Right"/>
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="ScrollAreaGrid">
-                <Canvas x:Name="GridCanvas" Margin="10" Height="1000" Width="1000" Grid.Column="1"/>
+                <Border Name="circlemask" Background="White" CornerRadius="500"/>
+                <Canvas x:Name="GridCanvas" Height="1000" Width="1000" Grid.Column="1">
+                    <Canvas.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=circlemask}"/>
+                    </Canvas.OpacityMask>
+                </Canvas>
                 <Image x:Name="MillDisk" HorizontalAlignment="Center" Height="{Binding ActualHeight, ElementName=GridCanvas, Mode=OneWay}" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=GridCanvas, Mode=OneWay}" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0">
                     <Image.RenderTransform>
                         <TransformGroup>
