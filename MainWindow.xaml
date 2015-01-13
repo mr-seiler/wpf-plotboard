@@ -5,6 +5,7 @@
         Title="MainWindow" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <local:MillToDegreeConverter x:Key="millToDegConverter"/>
+        <BitmapImage x:Key="protractor" UriSource="./img/protractor.png" />
     </Window.Resources>
 
     <Grid Width="1000" Height="600">
@@ -16,7 +17,7 @@
 
         <Canvas x:Name="GridCanvas" Margin="7,0" Height="600" Width="600" Grid.Column="1"/>
 
-        <Image x:Name="MillDisk" HorizontalAlignment="Center" Height="600" VerticalAlignment="Center" Width="600" Source="C:\Users\Matthew\Desktop\Target_Protractor__07711_zoom_edit.png" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0">
+        <Image x:Name="MillDisk" HorizontalAlignment="Center" Height="600" VerticalAlignment="Center" Width="600" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0">
             <Image.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
