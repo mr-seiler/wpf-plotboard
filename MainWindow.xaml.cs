@@ -23,51 +23,59 @@ namespace PlottingBoard
         public MainWindow()
         {
             InitializeComponent();
-            drawGridLines();
+            drawGridLines(GridCanvas, Brushes.LightGreen, 120, true, 10);
 
         }
 
-        private void drawGridLines()
+        private void drawGridLines(Canvas canvas, Brush brush, int numLines, bool indexLines, int indexInterval)
         {
-            int w = (int)GridCanvas.Width;
-            int h = (int)GridCanvas.Height;
+            // alias canvas size
+            double w = canvas.Width;
+            double h = canvas.Height;
 
-            Console.WriteLine(String.Format("Canvas size: {0} x {1}", w, h));
-
-            Brush b = Brushes.LightGreen;
+            // figure the space between each line, using the smaller of the two canvas dimensions
+            double gap = Math.Min(w, h) / numLines;
             
             // draw vertical lines
-            int y1 = 0, y2 = h;
-            int numLines = w / 10;
-            Console.WriteLine(String.Format("Num of vertical lines: {0}", numLines));
-            for (int i = 0; i < numLines; i += 1)
+            double y1 = 0, y2 = h;
+            // we don't know if the canvas is square; figure out the number of lines to draw based on the width
+            int actualLineCount = (int)Math.Round(w / gap);
+
+            Console.WriteLine(String.Format("{0} x {1}, asked for {3} getting {4} (gap of {2})", w, h, gap, numLines, actualLineCount));
+
+            for (int i = 0; i <= actualLineCount; i += 1)
             {
-                int x = i * 10;
+                double x = i * gap;
                 Line l = new Line();
                 l.X1 = x;
                 l.X2 = x;
                 l.Y1 = y1;
                 l.Y2 = y2;
-                l.Stroke = b;
-                l.StrokeThickness = (i % 10 == 0 ? 2 : 1);
-                GridCanvas.Children.Add(l);
+                l.Stroke = brush;
+                l.StrokeThickness = 1;
+                if (indexLines && i % indexInterval == 0)
+                {
+                    l.StrokeThickness = 2;
+                }
+                canvas.Children.Add(l);
             }
 
             // draw horizontal lines
-            int x1 = 0, x2 = w;
-            numLines = h / 10;
+            double x1 = 0, x2 = w;
+            // again, since we don't know if the canvas is square...
+            actualLineCount = (int)Math.Round(h / gap);
 
-            for (int i = 0; i < numLines; i += 1)
+            for (int i = 0; i <= actualLineCount; i += 1)
             {
-                int y = i * 10;
+                double y = i * gap;
                 Line l = new Line();
                 l.X1 = x1;
                 l.X2 = x2;
                 l.Y1 = y;
                 l.Y2 = y;
-                l.Stroke = b;
-                l.StrokeThickness = (i % 10 == 0 ? 2 : 1);
-                GridCanvas.Children.Add(l);
+                l.Stroke = brush;
+                l.StrokeThickness = (indexLines && i % indexInterval == 0 ? 2 : 1);
+                canvas.Children.Add(l);
             }
 
         }
