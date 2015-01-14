@@ -10,8 +10,12 @@
     </Window.Resources>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
-        <Grid x:Name="DockLeftGrid" DockPanel.Dock="Left" Width="232">
-            <GroupBox x:Name="AngleControlGroup" Header="Angle Control">
+        <Grid x:Name="DockLeftGrid" DockPanel.Dock="Left" Width="232" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox x:Name="AngleControlGroup" Header="Angle Control" Grid.Row="0">
                 <Grid>
                     <Slider x:Name="MillSlider" 
 						HorizontalAlignment="Left" 
@@ -37,17 +41,39 @@
 						MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,37,0,0"/>
                 </Grid>
             </GroupBox>
+            <GroupBox x:Name="MarkerSourceGroup" Header="Markers" Grid.Row="1">
+                <StackPanel>
+                    <Border Margin="10,10,10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="RedMarkBtn" ClipToBounds="True" MouseMove="RedMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="#FFDC1111" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="#FF640707"></Ellipse>
+                            <Label Content="Red" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                    <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="GreenMarkBtn" ClipToBounds="True"  MouseMove="GreenMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="#FF2CC133" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="#FF145717"></Ellipse>
+                            <Label Content="Green" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                    <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="BlueMarkBtn" ClipToBounds="True"  MouseMove="BlueMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="#FF1189DC" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="#FF043774"></Ellipse>
+                            <Label Content="Blue" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                </StackPanel>
+            </GroupBox>
         </Grid>
         <Grid x:Name="DockRightGrid" DockPanel.Dock="Right"/>
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="ScrollAreaGrid">
-                <Border Name="circlemask" Background="White" CornerRadius="500"/>
-                <Canvas x:Name="GridCanvas" Height="1000" Width="1000" Grid.Column="1">
+                <Border Name="circlemask" Background="White" CornerRadius="500" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
+                <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1000" Height="1000">
                     <Canvas.OpacityMask>
                         <VisualBrush Visual="{Binding ElementName=circlemask}"/>
                     </Canvas.OpacityMask>
                 </Canvas>
-                <Image x:Name="MillDisk" HorizontalAlignment="Center" Height="{Binding ActualHeight, ElementName=GridCanvas, Mode=OneWay}" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=GridCanvas, Mode=OneWay}" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0">
+                <Image x:Name="MillDisk" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}">
                     <Image.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -57,6 +83,7 @@
                         </TransformGroup>
                     </Image.RenderTransform>
                 </Image>
+                <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#02000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" />
             </Grid>
         </ScrollViewer>
 
