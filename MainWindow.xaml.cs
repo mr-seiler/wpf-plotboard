@@ -141,37 +141,39 @@ namespace PlottingBoard
             // get position of drop relative to marker area (rectangle)
             Point where = e.GetPosition(MarkerArea);
 
-            // we know the color (sort of), and we know where to put it.
-            // create a new ellipse (how?)
-            // add it to a dictionary, so we can keep track of it.
-            // add it as a child of the rectangle.  maybe.
+            // create marker and save in dictionary
             Ellipse m = buildMarker(color);
             markers.Add(m);
 
+            // add as child of canvas
             MarkerArea.Children.Add(m);
+            // set position on canvas
             Canvas.SetTop(m, where.Y - (m.Height / 2));
             Canvas.SetLeft(m, where.X - (m.Width / 2));
         }
 
+        /* Keep all the markers here... There very well may be a better place for this. */
         private List<Ellipse> markers = new List<Ellipse>();
 
-        private static Ellipse buildMarker(MarkColors color)
+        private Ellipse buildMarker(MarkColors color)
         {
             Ellipse mark = new Ellipse();
 
-            mark.Width = 20;
-            mark.Height = 20;
+            mark.Width = mark.Height = 18;
 
             switch (color)
             {
                 case MarkColors.BLUE:
-                    mark.Fill = Brushes.Blue;
+                    mark.Fill = (Brush)this.FindResource("brush-blue");
+                    mark.Stroke = (Brush)this.FindResource("brush-darkblue");
                     break;
                 case MarkColors.GREEN:
-                    mark.Fill = Brushes.Green;
+                    mark.Fill = (Brush)this.FindResource("brush-green");
+                    mark.Stroke = (Brush)this.FindResource("brush-darkgreen");
                     break;
                 case MarkColors.RED:
-                    mark.Fill = Brushes.Red;
+                    mark.Fill = (Brush)this.FindResource("brush-red");
+                    mark.Stroke = (Brush)this.FindResource("brush-darkred");
                     break;
                 default:
                     mark.Fill = Brushes.Gray;
