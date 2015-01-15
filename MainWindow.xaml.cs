@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +26,8 @@ namespace PlottingBoard
         public MainWindow()
         {
             InitializeComponent();
+
+            setupHotkeys();
 
             drawGridLines(GridCanvas, Brushes.LightGreen, 120, true, 10);
         }
@@ -103,12 +106,8 @@ namespace PlottingBoard
         {
             WrapPanel btn = sender as WrapPanel;
 
-            Console.WriteLine("In MouseMove, " + BlueMarkBtn.ToString() + " " + e.LeftButton);
-
             if (btn != null && e.LeftButton == MouseButtonState.Pressed)
             {
-                Console.WriteLine("DODRAGDROP");
-
                 // pack up the color we want to use...
                 DataObject dragData = new DataObject("markColor", color);
                 // initialize the boogey
@@ -118,13 +117,10 @@ namespace PlottingBoard
         }
 
         private void MarkerArea_DragEnter(object sender, DragEventArgs e)
-        {
-            Console.WriteLine("DragEnter");
-            
+        {   
             // if the drag data isn't a marker color, then stop the drop
             if (!e.Data.GetDataPresent("markColor"))
             {
-                Console.WriteLine("Setting effect to none");
                 e.Effects = DragDropEffects.None;
             }
             // can also check source to stop drag/drop onto self:
@@ -133,8 +129,6 @@ namespace PlottingBoard
 
         private void MarkerArea_Drop(object sender, DragEventArgs e)
         {
-            Console.WriteLine("In Drop");
-
             // casting to an enum.  delicious!
             MarkColors color = (MarkColors)e.Data.GetData("markColor");
 
@@ -183,6 +177,51 @@ namespace PlottingBoard
             mark.RenderTransformOrigin = new Point(0.5, 0.5);
 
             return mark;
+        }
+
+
+
+        private void setupHotkeys()
+        {
+            RoutedCommand decreaseAngle = new RoutedCommand();
+            decreaseAngle.InputGestures.Add(new KeyGesture(Key.Left));
+            CommandBindings.Add(new CommandBinding(decreaseAngle, handle_decreaseAngle));
+
+            RoutedCommand decreaseAngleMore = new RoutedCommand();
+            decreaseAngleMore.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Shift));
+            CommandBindings.Add(new CommandBinding(decreaseAngleMore, handle_decreaseAngleMore));
+
+            RoutedCommand increaseAngle = new RoutedCommand();
+            increaseAngle.InputGestures.Add(new KeyGesture(Key.Right));
+            CommandBindings.Add(new CommandBinding(increaseAngle, handle_increaseAngle));
+
+            RoutedCommand increaseAngleMore = new RoutedCommand();
+            increaseAngleMore.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Shift));
+            CommandBindings.Add(new CommandBinding(increaseAngleMore, handle_increaseAngleMore));
+        }
+
+        private void handle_decreaseAngle(object sender, ExecutedRoutedEventArgs e)
+        {
+            RotationControl rc = this.FindResource("rotationControl") as RotationControl;
+            rc.AngleMill = rc.AngleMill - 1;
+        }
+
+        private void handle_decreaseAngleMore(object sender, ExecutedRoutedEventArgs e)
+        {
+            RotationControl rc = this.FindResource("rotationControl") as RotationControl;
+            rc.AngleMill = rc.AngleMill - 20;
+        }
+
+        private void handle_increaseAngle(object sender, ExecutedRoutedEventArgs e)
+        {
+            RotationControl rc = this.FindResource("rotationControl") as RotationControl;
+            rc.AngleMill = rc.AngleMill + 1;
+        }
+
+        private void handle_increaseAngleMore(object sender, ExecutedRoutedEventArgs e)
+        {
+            RotationControl rc = this.FindResource("rotationControl") as RotationControl;
+            rc.AngleMill = rc.AngleMill + 20;
         }
 
     }
