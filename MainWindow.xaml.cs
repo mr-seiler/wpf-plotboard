@@ -85,7 +85,8 @@ namespace PlottingBoard
 
         }
 
-        /* seperate mousemove handlers, so we can tell which button is which without hacks or a custom compund control (extending button) */
+
+        /* Drag and drop markers */
 
         private void RedMarkBtn_MouseMove(object sender, MouseEventArgs e)
         {
@@ -179,7 +180,14 @@ namespace PlottingBoard
             return mark;
         }
 
+        private void ClearAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MarkerArea.Children.Clear();
+            this.markers.Clear();
+        }
 
+
+        /* Hotkeys and such */
 
         private void setupHotkeys()
         {
@@ -223,6 +231,8 @@ namespace PlottingBoard
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
             rc.AngleMill = rc.AngleMill + 20;
         }
+
+        
 
     }
 

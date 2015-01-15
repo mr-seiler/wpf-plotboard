@@ -51,7 +51,7 @@
 						TextWrapping="Wrap" 
 						Text="{Binding AngleMill, StringFormat=#0}"
 						VerticalAlignment="Top" 
-						Width="52" 
+						Width="43" 
 						MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,9,0,0"/>
                     <TextBox x:Name="DegText" 
 						HorizontalAlignment="Left" 
@@ -59,8 +59,13 @@
 						TextWrapping="Wrap" 
 						Text="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, StringFormat=0.00}"
 						VerticalAlignment="Top" 
-						Width="52" 
+						Width="43" 
 						MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,37,0,0"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Width="142" Height="53">
+                        <Italic>Keyboard:<LineBreak/>
+                        decrease: ←, shift + ←<LineBreak/>
+                        increase: →, shift + →</Italic>
+                    </TextBlock>
                 </Grid>
             </GroupBox>
             <GroupBox x:Name="MarkerSourceGroup" Header="Markers" Grid.Row="1">
@@ -83,6 +88,7 @@
                             <Label Content="Blue" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
                         </WrapPanel>
                     </Border>
+                    <Button x:Name="ClearAllBtn" Content="Clear All Markers" HorizontalAlignment="Center" Margin="10,5,10,10" Click="ClearAllBtn_Click" Padding="5,3"/>
                 </StackPanel>
             </GroupBox>
         </Grid>
