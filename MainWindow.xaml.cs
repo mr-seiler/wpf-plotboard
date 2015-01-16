@@ -23,13 +23,31 @@ namespace PlottingBoard
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Dictionary<MarkColors, Brush> colorBrushes;
+        
         public MainWindow()
         {
             InitializeComponent();
 
             setupHotkeys();
 
+            this.colorBrushes = buildBrushDict();
+
             drawGridLines(GridCanvas, Brushes.LightGreen, 120, true, 10);
+        }
+
+        private Dictionary<MarkColors, Brush> buildBrushDict() 
+        {
+            Dictionary<MarkColors, Brush> brushes = new Dictionary<MarkColors, Brush>();
+
+            brushes.Add(MarkColors.RED, (Brush)this.FindResource("brush-red"));
+            brushes.Add(MarkColors.GREEN, (Brush)this.FindResource("brush-green"));
+            brushes.Add(MarkColors.BLUE, (Brush)this.FindResource("brush-blue"));
+            brushes.Add(MarkColors.YELLOW, (Brush)this.FindResource("brush-yellow"));
+            brushes.Add(MarkColors.MAGENTA, (Brush)this.FindResource("brush-magenta"));
+            brushes.Add(MarkColors.GRAY, (Brush)this.FindResource("brush-gray"));
+
+            return brushes;
         }
 
         private void drawGridLines(Canvas canvas, Brush brush, int numLines, bool indexLines, int indexInterval)
@@ -118,6 +136,7 @@ namespace PlottingBoard
             MarkBtn_MouseMove(sender, e, MarkColors.GRAY);
         }
 
+        // when a marker button in the sidebar is clicked and dragged:
         private void MarkBtn_MouseMove(object sender, MouseEventArgs e, PlottingBoard.MarkColors color)
         {
             WrapPanel btn = sender as WrapPanel;
@@ -132,10 +151,22 @@ namespace PlottingBoard
 
         }
 
+        // when a marker in the marker canvas is clicked and dragged:
+        private void Marker_MouseMove(object sender, MouseEventArgs e)
+        {
+            Ellipse mark = sender as Ellipse;
+
+            if (mark != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                DataObject dragData = new DataObject("moveMarker", mark);
+                DragDrop.DoDragDrop(mark, dragData, DragDropEffects.Move);
+            }
+        }
+
         private void MarkerArea_DragEnter(object sender, DragEventArgs e)
         {   
             // if the drag data isn't a marker color, then stop the drop
-            if (!e.Data.GetDataPresent("addMarker"))
+            if (!e.Data.GetDataPresent("addMarker") && !e.Data.GetDataPresent("moveMarker"))
             {
                 e.Effects = DragDropEffects.None;
             }
@@ -145,21 +176,36 @@ namespace PlottingBoard
 
         private void MarkerArea_Drop(object sender, DragEventArgs e)
         {
-            // casting to an enum.  delicious!
-            MarkColors color = (MarkColors)e.Data.GetData("addMarker");
-
             // get position of drop relative to marker area (rectangle)
             Point where = e.GetPosition(MarkerArea);
 
-            // create marker and save in dictionary
-            Ellipse m = buildMarker(color);
-            markers.Add(m);
+            if (e.Data.GetDataPresent("addMarker"))
+            {
+                // casting to an enum.  delicious!
+                MarkColors color = (MarkColors)e.Data.GetData("addMarker");
 
-            // add as child of canvas
-            MarkerArea.Children.Add(m);
-            // set position on canvas
-            Canvas.SetTop(m, where.Y - (m.Height / 2));
-            Canvas.SetLeft(m, where.X - (m.Width / 2));
+                // create marker and save in dictionary
+                Ellipse m = buildMarker(color);
+                markers.Add(m);
+
+                // add as child of canvas
+                MarkerArea.Children.Add(m);
+
+                // set position on canvas
+                MainWindow.setMarkerPosition(m, where);
+            }
+            else if (e.Data.GetDataPresent("moveMarker"))
+            {
+                Ellipse which = (Ellipse)e.Data.GetData("moveMarker");
+                MainWindow.setMarkerPosition(which, where);
+            }
+            
+        }
+
+        private static void setMarkerPosition(Ellipse e, Point p)
+        {
+            Canvas.SetTop(e, p.Y - (e.Height / 2));
+            Canvas.SetLeft(e, p.X - (e.Width / 2));
         }
 
         /* Keep all the markers here... There very well may be a better place for this. */
@@ -169,32 +215,17 @@ namespace PlottingBoard
         {
             Ellipse mark = new Ellipse();
 
+            // set size
             mark.Width = mark.Height = 12;
 
-            switch (color)
-            {
-                case MarkColors.RED:
-                    mark.Fill = (Brush)this.FindResource("brush-red");
-                    break;
-                case MarkColors.GREEN:
-                    mark.Fill = (Brush)this.FindResource("brush-green");
-                    break;
-                case MarkColors.BLUE:
-                    mark.Fill = (Brush)this.FindResource("brush-blue");
-                    break;
-                case MarkColors.YELLOW:
-                    mark.Fill = (Brush)this.FindResource("brush-yellow");
-                    break;
-                case MarkColors.MAGENTA:
-                    mark.Fill = (Brush)this.FindResource("brush-magenta");
-                    break;
-                case MarkColors.GRAY:
-                default:
-                    mark.Fill = (Brush)this.FindResource("brush-gray");
-                    break;
-            }
+            // set fill color
+            mark.Fill = colorBrushes[color];
 
+            // center mark on drop coordinates
             mark.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            // add event handler so that markers can be click-n-dragged
+            mark.AddHandler(Ellipse.MouseMoveEvent, new MouseEventHandler(Marker_MouseMove));
 
             return mark;
         }
