@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace PlottingBoard
 {
-    public enum MarkColors { RED, GREEN, BLUE };
+    public enum MarkColors { RED, GREEN, BLUE, YELLOW, MAGENTA, GRAY };
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -103,6 +103,21 @@ namespace PlottingBoard
             MarkBtn_MouseMove(sender, e, MarkColors.BLUE);
         }
 
+        private void YellowMarkBtn_MouseMove(object sender, MouseEventArgs e)
+        {
+            MarkBtn_MouseMove(sender, e, MarkColors.YELLOW);
+        }
+
+        private void MagentaMarkBtn_MouseMove(object sender, MouseEventArgs e)
+        {
+            MarkBtn_MouseMove(sender, e, MarkColors.MAGENTA);
+        }
+
+        private void GrayMarkBtn_MouseMove(object sender, MouseEventArgs e)
+        {
+            MarkBtn_MouseMove(sender, e, MarkColors.GRAY);
+        }
+
         private void MarkBtn_MouseMove(object sender, MouseEventArgs e, PlottingBoard.MarkColors color)
         {
             WrapPanel btn = sender as WrapPanel;
@@ -110,7 +125,7 @@ namespace PlottingBoard
             if (btn != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 // pack up the color we want to use...
-                DataObject dragData = new DataObject("markColor", color);
+                DataObject dragData = new DataObject("addMarker", color);
                 // initialize the boogey
                 DragDrop.DoDragDrop(btn, dragData, DragDropEffects.Copy);
             }
@@ -120,7 +135,7 @@ namespace PlottingBoard
         private void MarkerArea_DragEnter(object sender, DragEventArgs e)
         {   
             // if the drag data isn't a marker color, then stop the drop
-            if (!e.Data.GetDataPresent("markColor"))
+            if (!e.Data.GetDataPresent("addMarker"))
             {
                 e.Effects = DragDropEffects.None;
             }
@@ -131,7 +146,7 @@ namespace PlottingBoard
         private void MarkerArea_Drop(object sender, DragEventArgs e)
         {
             // casting to an enum.  delicious!
-            MarkColors color = (MarkColors)e.Data.GetData("markColor");
+            MarkColors color = (MarkColors)e.Data.GetData("addMarker");
 
             // get position of drop relative to marker area (rectangle)
             Point where = e.GetPosition(MarkerArea);
@@ -154,24 +169,28 @@ namespace PlottingBoard
         {
             Ellipse mark = new Ellipse();
 
-            mark.Width = mark.Height = 18;
+            mark.Width = mark.Height = 12;
 
             switch (color)
             {
-                case MarkColors.BLUE:
-                    mark.Fill = (Brush)this.FindResource("brush-blue");
-                    mark.Stroke = (Brush)this.FindResource("brush-darkblue");
+                case MarkColors.RED:
+                    mark.Fill = (Brush)this.FindResource("brush-red");
                     break;
                 case MarkColors.GREEN:
                     mark.Fill = (Brush)this.FindResource("brush-green");
-                    mark.Stroke = (Brush)this.FindResource("brush-darkgreen");
                     break;
-                case MarkColors.RED:
-                    mark.Fill = (Brush)this.FindResource("brush-red");
-                    mark.Stroke = (Brush)this.FindResource("brush-darkred");
+                case MarkColors.BLUE:
+                    mark.Fill = (Brush)this.FindResource("brush-blue");
                     break;
+                case MarkColors.YELLOW:
+                    mark.Fill = (Brush)this.FindResource("brush-yellow");
+                    break;
+                case MarkColors.MAGENTA:
+                    mark.Fill = (Brush)this.FindResource("brush-magenta");
+                    break;
+                case MarkColors.GRAY:
                 default:
-                    mark.Fill = Brushes.Gray;
+                    mark.Fill = (Brush)this.FindResource("brush-gray");
                     break;
             }
 
@@ -231,6 +250,9 @@ namespace PlottingBoard
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
             rc.AngleMill = rc.AngleMill + 20;
         }
+
+        
+
 
         
 

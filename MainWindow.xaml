@@ -9,22 +9,22 @@
         <local:MillToDegConverter x:Key="MillToDegConverter"/>
         <!-- Shared angle data source -->
         <local:RotationControl x:Key="rotationControl"/>
-        <!-- mill disk image -->
+        <!-- azimuth disk image -->
         <BitmapImage x:Key="protractor" UriSource="./img/protractor.png"/>
         <!-- color definitions -->
-        <Color x:Key="color-red">#FFDC1111</Color>
-        <Color x:Key="color-darkred">#FF640707</Color>
-        <Color x:Key="color-green">#FF2CC133</Color>
-        <Color x:Key="color-darkgreen">#FF145717</Color>
-        <Color x:Key="color-blue">#FF1189DC</Color>
-        <Color x:Key="color-darkblue">#FF043774</Color>
+        <Color x:Key="color-red">#dc322f</Color>
+        <Color x:Key="color-green">#859900</Color>
+        <Color x:Key="color-blue">#268bd2</Color>
+        <Color x:Key="color-yellow">#b58900</Color>
+        <Color x:Key="color-magenta">#d33682</Color>
+        <Color x:Key="color-gray">#93a1a1</Color>
         <!-- colors as brushes -->
         <SolidColorBrush x:Key="brush-red" Color="{StaticResource color-red}"/>
-        <SolidColorBrush x:Key="brush-darkred" Color="{StaticResource color-darkred}"/>
         <SolidColorBrush x:Key="brush-green" Color="{StaticResource color-green}"/>
-        <SolidColorBrush x:Key="brush-darkgreen" Color="{StaticResource color-darkgreen}"/>
         <SolidColorBrush x:Key="brush-blue" Color="{StaticResource color-blue}"/>
-        <SolidColorBrush x:Key="brush-darkblue" Color="{StaticResource color-darkblue}"/>
+        <SolidColorBrush x:Key="brush-yellow" Color="{StaticResource color-yellow}"/>
+        <SolidColorBrush x:Key="brush-magenta" Color="{StaticResource color-magenta}"/>
+        <SolidColorBrush x:Key="brush-gray" Color="{StaticResource color-gray}"/>
     </Window.Resources>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -72,20 +72,38 @@
                 <StackPanel>
                     <Border Margin="10,10,10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
                         <WrapPanel x:Name="RedMarkBtn" ClipToBounds="True" MouseMove="RedMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
-                            <Ellipse Fill="{DynamicResource brush-red}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="{DynamicResource brush-darkred}"></Ellipse>
+                            <Ellipse Fill="{DynamicResource brush-red}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
                             <Label Content="Red" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
                         </WrapPanel>
                     </Border>
                     <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
                         <WrapPanel x:Name="GreenMarkBtn" ClipToBounds="True"  MouseMove="GreenMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
-                            <Ellipse Fill="{DynamicResource brush-green}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="{DynamicResource brush-darkgreen}"></Ellipse>
+                            <Ellipse Fill="{DynamicResource brush-green}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
                             <Label Content="Green" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
                         </WrapPanel>
                     </Border>
                     <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
                         <WrapPanel x:Name="BlueMarkBtn" ClipToBounds="True"  MouseMove="BlueMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
-                            <Ellipse Fill="{DynamicResource brush-blue}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0" Stroke="{DynamicResource brush-darkblue}"></Ellipse>
+                            <Ellipse Fill="{DynamicResource brush-blue}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
                             <Label Content="Blue" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                    <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="YellowMarkBtn" ClipToBounds="True" MouseMove="YellowMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="{DynamicResource brush-yellow}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
+                            <Label Content="Yellow" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                    <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="MagentaMarkBtn" ClipToBounds="True"  MouseMove="MagentaMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="{DynamicResource brush-magenta}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
+                            <Label Content="Magenta" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                        </WrapPanel>
+                    </Border>
+                    <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
+                        <WrapPanel x:Name="GrayMarkBtn" ClipToBounds="True"  MouseMove="GrayMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
+                            <Ellipse Fill="{DynamicResource brush-gray}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
+                            <Label Content="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
                         </WrapPanel>
                     </Border>
                     <Button x:Name="ClearAllBtn" Content="Clear All Markers" HorizontalAlignment="Center" Margin="10,5,10,10" Click="ClearAllBtn_Click" Padding="5,3"/>
