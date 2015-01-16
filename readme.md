@@ -1,16 +1,16 @@
 **Plotting Thingy**
 _Prototype mortar plotting board training thingy for A.V._
 
-Notes and Ideas and Todos and Such:
+Things to finish (in order of priority)
 
-- Instead of drawing grid lines when the app is initializes, they should be triggered by events (like load/initialize or redraw). Either:
-    + Add event handlers to the existing canvas, OR
-    + Subclass Canvas to encapsulate drawing logic (preferred?)
-- Drag and Drop markers
-    + Challenging.  Not sure how to do this yet.
-    + Simple markers could just be dots w/ different colors
-    + Drag from a dot in the left panel to a canvas overlaying the disk
-    + On release, need to create a new marker on the canvas
-        * If we want to add other action to the markers (labels, delete individual markers) then they can't just be painted, they need to be controls themselves that can be clicked!
-- Make the plot area zoomable
-    + No idea how to do this yet
+1. Vernier scale for measuring single mills
+	+ There is a very precise relationship between the azimuth disk
+	  and the vernier scale, otherwise it wouldn't be a proper scale.
+	  Somehow have to figure out what that is...
+2. Range labels on grid (50 m each line, labels every 500 m)
+	+ UserCountrol (compound) of labels nested in canvas? or would the grid
+	  lines go over top the labels?
+3. Labelled markers - set label in sidebar and display adjacent to marker
+	+ UserControl (compound) for label + ellipse + data
+	+ rotate markers with azimuth disk the hard way (watch angle and do math)
+4. Subclass canvas for drawing grid lines, draw grid lines on event of somekind
