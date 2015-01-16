@@ -95,23 +95,38 @@
         <Grid x:Name="DockRightGrid" DockPanel.Dock="Right"/>
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="ScrollAreaGrid">
-                <Border Name="circlemask" Background="White" CornerRadius="500" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
-                <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1000" Height="1000">
-                    <Canvas.OpacityMask>
-                        <VisualBrush Visual="{Binding ElementName=circlemask}"/>
-                    </Canvas.OpacityMask>
-                </Canvas>
-                <Image x:Name="MillDisk" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}">
-                    <Image.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, Source={StaticResource rotationControl}}"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Image.RenderTransform>
-                </Image>
-                <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#02000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" />
+                <Grid x:Name="RotatorGrid">
+                    <Border Name="circlemask" Background="White" CornerRadius="500" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
+                    <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1000" Height="1000">
+                        <Canvas.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=circlemask}"/>
+                        </Canvas.OpacityMask>
+                    </Canvas>
+                    <Image x:Name="MillDisk" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}">
+                        <Image.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, Source={StaticResource rotationControl}}"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Image.RenderTransform>
+                    </Image>
+                    <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#12000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" RenderTransformOrigin="0.5,0.5" >
+                        <Canvas.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, Source={StaticResource rotationControl}}"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Canvas.RenderTransform>
+                        <Canvas.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=circlemask}"/>
+                        </Canvas.OpacityMask>
+                    </Canvas>
+                </Grid>
+                <!-- vernier scale goes in here somewhere -->
             </Grid>
         </ScrollViewer>
 
