@@ -69,7 +69,7 @@
                 </Grid>
             </GroupBox>
             <GroupBox x:Name="MarkerSourceGroup" Header="Markers" Grid.Row="1">
-                <StackPanel>
+                <StackPanel x:Name="MarkerSourceStack" DragEnter="MarkerSourceStack_DragEnter" Drop="MarkerSourceStack_Drop" AllowDrop="True">
                     <Border Margin="10,10,10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
                         <WrapPanel x:Name="RedMarkBtn" ClipToBounds="True" MouseMove="RedMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
                             <Ellipse Fill="{DynamicResource brush-red}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
@@ -130,7 +130,7 @@
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
-                    <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#12000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" RenderTransformOrigin="0.5,0.5" >
+                    <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#01000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" RenderTransformOrigin="0.5,0.5" >
                         <Canvas.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>

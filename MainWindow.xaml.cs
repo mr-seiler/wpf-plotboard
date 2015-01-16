@@ -184,9 +184,8 @@ namespace PlottingBoard
                 // casting to an enum.  delicious!
                 MarkColors color = (MarkColors)e.Data.GetData("addMarker");
 
-                // create marker and save in dictionary
+                // create marker
                 Ellipse m = buildMarker(color);
-                markers.Add(m);
 
                 // add as child of canvas
                 MarkerArea.Children.Add(m);
@@ -202,14 +201,29 @@ namespace PlottingBoard
             
         }
 
+
+        private void MarkerSourceStack_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent("moveMarker"))
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void MarkerSourceStack_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("moveMarker"))
+            {
+                Ellipse which = (Ellipse)e.Data.GetData("moveMarker");
+                MarkerArea.Children.Remove(which);
+            }
+        }
+
         private static void setMarkerPosition(Ellipse e, Point p)
         {
             Canvas.SetTop(e, p.Y - (e.Height / 2));
             Canvas.SetLeft(e, p.X - (e.Width / 2));
         }
-
-        /* Keep all the markers here... There very well may be a better place for this. */
-        private List<Ellipse> markers = new List<Ellipse>();
 
         private Ellipse buildMarker(MarkColors color)
         {
@@ -233,7 +247,6 @@ namespace PlottingBoard
         private void ClearAllBtn_Click(object sender, RoutedEventArgs e)
         {
             MarkerArea.Children.Clear();
-            this.markers.Clear();
         }
 
 
@@ -281,6 +294,7 @@ namespace PlottingBoard
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
             rc.AngleMill = rc.AngleMill + 20;
         }
+
 
         
 
