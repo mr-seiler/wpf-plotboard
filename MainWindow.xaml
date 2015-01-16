@@ -15,14 +15,14 @@
         <Color x:Key="color-red">#dc322f</Color>
         <Color x:Key="color-green">#859900</Color>
         <Color x:Key="color-blue">#268bd2</Color>
-        <Color x:Key="color-yellow">#b58900</Color>
+        <Color x:Key="color-yellow">#FFDDBC00</Color>
         <Color x:Key="color-magenta">#d33682</Color>
         <Color x:Key="color-gray">#93a1a1</Color>
         <!-- colors as brushes -->
         <SolidColorBrush x:Key="brush-red" Color="{StaticResource color-red}"/>
         <SolidColorBrush x:Key="brush-green" Color="{StaticResource color-green}"/>
         <SolidColorBrush x:Key="brush-blue" Color="{StaticResource color-blue}"/>
-        <SolidColorBrush x:Key="brush-yellow" Color="{StaticResource color-yellow}"/>
+        <SolidColorBrush x:Key="brush-yellow" Color="{DynamicResource color-yellow}"/>
         <SolidColorBrush x:Key="brush-magenta" Color="{StaticResource color-magenta}"/>
         <SolidColorBrush x:Key="brush-gray" Color="{StaticResource color-gray}"/>
     </Window.Resources>
