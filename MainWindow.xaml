@@ -29,7 +29,7 @@
     </Window.Resources>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
-        <Grid x:Name="DockLeftGrid" DockPanel.Dock="Left" Width="220" VerticalAlignment="Top">
+        <Grid x:Name="DockLeftGrid" DockPanel.Dock="Left" Width="240" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -43,12 +43,15 @@
                     <Slider x:Name="MillSlider" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="140" Value="{Binding AngleMill}" Maximum="6400" LargeChange="10" SmallChange="1" TickFrequency="100"/>
                     <TextBox x:Name="MillText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, StringFormat=#0}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,9,0,10"/>
                     <TextBox x:Name="DegText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, StringFormat=0.00}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,40,0,10"/>
+                    <Label Content="mil" Margin="205,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="17" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
+                    <Label Content="°" Margin="205,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="13" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                 </Grid>
             </GroupBox>
             <GroupBox x:Name="ScaleControlGroup" Header="Scale Control" Grid.Row="1" VerticalAlignment="Top">
                 <Grid>
                     <Slider x:Name="ScaleSlider" SmallChange="0.01" Maximum="2.5" Minimum="0.5" Value="0.9" VerticalAlignment="Top" Margin="10" Width="140" HorizontalAlignment="Left" TickFrequency="0.5" />
                     <TextBox x:Name="ScaleText" HorizontalAlignment="Left" Height="24" Margin="155,10,0,10" TextWrapping="Wrap" Text="{Binding Value, ElementName=ScaleSlider, Mode=OneWay, StringFormat=\{0:P\}}" VerticalAlignment="Center" Width="45" IsReadOnly="True" IsEnabled="False"/>
+                    <Label Content="%" Margin="205,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="13" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                 </Grid>
             </GroupBox>
             <GroupBox x:Name="MarkerSourceGroup" Header="Markers" Grid.Row="2" VerticalAlignment="Top">
@@ -92,6 +95,7 @@
                     <Button x:Name="ClearAllBtn" Content="Clear All Markers" HorizontalAlignment="Center" Margin="10,5,10,10" Click="ClearAllBtn_Click" Padding="5,3"/>
                 </StackPanel>
             </GroupBox>
+            
         </Grid>
         <!-- the main window area, containing the azimuth disk and marker canvas, etc. -->
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
