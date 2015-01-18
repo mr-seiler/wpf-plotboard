@@ -3,14 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PlottingBoard"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PlottingBoard.MainWindow"
-        Title="Plotting Board-ish" ResizeMode="CanResizeWithGrip" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen" d:DesignWidth="1043" d:DesignHeight="777" SizeToContent="Width">
+        Title="Plotting Board-ish" ResizeMode="CanResizeWithGrip" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen" SizeToContent="Width" Height="827" Width="1177">
     <Window.Resources>
         <!-- To convert m2d in data binding -->
         <local:MillToDegConverter x:Key="MillToDegConverter"/>
         <!-- Shared angle data source -->
         <local:RotationControl x:Key="rotationControl"/>
-        <!-- azimuth disk image -->
+        <!-- image resources -->
         <BitmapImage x:Key="protractor" UriSource="./img/protractor.png"/>
+        <BitmapImage x:Key="vernier" UriSource="./img/vernier.png"/>
         <!-- color definitions -->
         <Color x:Key="color-red">#dc322f</Color>
         <Color x:Key="color-green">#859900</Color>
@@ -38,29 +39,9 @@
                     <Binding Source="{StaticResource rotationControl}" />
                 </GroupBox.DataContext>
                 <Grid>
-                    <Slider x:Name="MillSlider" 
-						HorizontalAlignment="Left" 
-						Margin="10,10,0,0" 
-						VerticalAlignment="Top" 
-						Width="142"
-                        Value="{Binding AngleMill}"
-						Maximum="6400" LargeChange="10" SmallChange="1"/>
-                    <TextBox x:Name="MillText" 
-						HorizontalAlignment="Left" 
-						Height="23" 
-						TextWrapping="Wrap" 
-						Text="{Binding AngleMill, StringFormat=#0}"
-						VerticalAlignment="Top" 
-						Width="43" 
-						MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,9,0,0"/>
-                    <TextBox x:Name="DegText" 
-						HorizontalAlignment="Left" 
-						Height="23" 
-						TextWrapping="Wrap" 
-						Text="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, StringFormat=0.00}"
-						VerticalAlignment="Top" 
-						Width="43" 
-						MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,37,0,0"/>
+                    <Slider x:Name="MillSlider" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="142" Value="{Binding AngleMill}" Maximum="6400" LargeChange="10" SmallChange="1"/>
+                    <TextBox x:Name="MillText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, StringFormat=#0}" VerticalAlignment="Top" Width="43" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,9,0,0"/>
+                    <TextBox x:Name="DegText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, StringFormat=0.00}" VerticalAlignment="Top" Width="43" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="157,37,0,0"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Width="142" Height="53">
                         <Italic>Keyboard:<LineBreak/>
                         decrease: ←, shift + ←<LineBreak/>
@@ -110,12 +91,15 @@
                 </StackPanel>
             </GroupBox>
         </Grid>
-        <Grid x:Name="DockRightGrid" DockPanel.Dock="Right"/>
+        <!-- the main window area, containing the azimuth disk and marker canvas, etc. -->
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="ScrollAreaGrid">
-                <Grid x:Name="RotatorGrid">
-                    <Border Name="circlemask" Background="White" CornerRadius="500" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
-                    <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1000" Height="1000">
+            <Grid x:Name="ScrollAreaGrid" RenderTransformOrigin="0.5,0.5">
+                <!-- vernier scale here, zindex set to appear on top of the grid lines and azimuth disk -->
+                <Image x:Name="VernierScale" Source="{StaticResource vernier}" Width="150" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0" Panel.ZIndex="1"/>
+                <!-- nested grid contains the grid lines, azimuth disk, and marker canvas -->
+                <Grid x:Name="RotatorGrid" Margin="0,54,0,0">
+                    <Border Name="circlemask" Background="White" CornerRadius="640" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
+                    <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1280" Height="1280">
                         <Canvas.OpacityMask>
                             <VisualBrush Visual="{Binding ElementName=circlemask}"/>
                         </Canvas.OpacityMask>
@@ -144,9 +128,7 @@
                         </Canvas.OpacityMask>
                     </Canvas>
                 </Grid>
-                <!-- vernier scale goes in here somewhere -->
             </Grid>
         </ScrollViewer>
-
     </DockPanel>
 </Window>
