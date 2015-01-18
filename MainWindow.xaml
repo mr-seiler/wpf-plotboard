@@ -2,13 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PlottingBoard"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PlottingBoard.MainWindow"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
+        x:Class="PlottingBoard.MainWindow"
         Title="Plotting Board-ish" ResizeMode="CanResizeWithGrip" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen" SizeToContent="Width" Height="827" Width="1177">
     <Window.Resources>
         <!-- To convert m2d in data binding -->
         <local:MillToDegConverter x:Key="MillToDegConverter"/>
         <!-- Shared angle data source -->
         <local:RotationControl x:Key="rotationControl"/>
+        <!-- shared scale data source -->
+        <local:ScaleControl x:Key="scaleControl"/>
         <!-- image resources -->
         <BitmapImage x:Key="protractor" UriSource="./img/protractor.png"/>
         <BitmapImage x:Key="vernier" UriSource="./img/vernier.png"/>
@@ -49,7 +53,7 @@
             </GroupBox>
             <GroupBox x:Name="ScaleControlGroup" Header="Scale Control" Grid.Row="1" VerticalAlignment="Top">
                 <Grid>
-                    <Slider x:Name="ScaleSlider" SmallChange="0.01" Maximum="2.5" Minimum="0.5" Value="0.9" VerticalAlignment="Top" Margin="10" Width="140" HorizontalAlignment="Left" TickFrequency="0.5" />
+                    <Slider x:Name="ScaleSlider" SmallChange="0.01" Maximum="{Binding ScaleMax, Source={StaticResource scaleControl}}" Minimum="{Binding ScaleMin, Source={StaticResource scaleControl}}" Value="{Binding Scale, Source={StaticResource scaleControl}}" VerticalAlignment="Top" Margin="10" Width="140" HorizontalAlignment="Left" TickFrequency="0.5" />
                     <TextBox x:Name="ScaleText" HorizontalAlignment="Left" Height="24" Margin="155,10,0,10" TextWrapping="Wrap" Text="{Binding Value, ElementName=ScaleSlider, Mode=OneWay, StringFormat=\{0:P\}}" VerticalAlignment="Center" Width="45" IsReadOnly="True" IsEnabled="False"/>
                     <Label Content="%" Margin="205,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="13" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                 </Grid>

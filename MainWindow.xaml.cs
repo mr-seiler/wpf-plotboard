@@ -254,21 +254,22 @@ namespace PlottingBoard
 
         private void setupHotkeys()
         {
-            RoutedCommand decreaseAngle = new RoutedCommand();
-            decreaseAngle.InputGestures.Add(new KeyGesture(Key.Left));
-            CommandBindings.Add(new CommandBinding(decreaseAngle, handle_decreaseAngle));
+            List<KeyKombo> hotkeys = new List<KeyKombo>
+            {
+                new KeyKombo(Key.Left, handle_decreaseAngle),
+                new KeyKombo(Key.Left, ModifierKeys.Shift, handle_decreaseAngleMore),
+                new KeyKombo(Key.Right, handle_increaseAngle),
+                new KeyKombo(Key.Right, ModifierKeys.Shift, handle_increaseAngleMore),
+                new KeyKombo(Key.Up, ModifierKeys.Shift, handle_resetAngle),
+                new KeyKombo(Key.OemPlus, ModifierKeys.Control, handle_zoomIn),
+                new KeyKombo(Key.OemMinus, ModifierKeys.Control, handle_zoomOut),
+                new KeyKombo(Key.D0, ModifierKeys.Control, handle_zoomReset)
+            };
 
-            RoutedCommand decreaseAngleMore = new RoutedCommand();
-            decreaseAngleMore.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Shift));
-            CommandBindings.Add(new CommandBinding(decreaseAngleMore, handle_decreaseAngleMore));
-
-            RoutedCommand increaseAngle = new RoutedCommand();
-            increaseAngle.InputGestures.Add(new KeyGesture(Key.Right));
-            CommandBindings.Add(new CommandBinding(increaseAngle, handle_increaseAngle));
-
-            RoutedCommand increaseAngleMore = new RoutedCommand();
-            increaseAngleMore.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Shift));
-            CommandBindings.Add(new CommandBinding(increaseAngleMore, handle_increaseAngleMore));
+            foreach (var k in hotkeys)
+            {
+                CommandBindings.Add(k.getCommandBinding());
+            }
         }
 
         private void handle_decreaseAngle(object sender, ExecutedRoutedEventArgs e)
@@ -295,11 +296,29 @@ namespace PlottingBoard
             rc.AngleMill = rc.AngleMill + 20;
         }
 
+        private void handle_resetAngle(object sender, ExecutedRoutedEventArgs e)
+        {
+            RotationControl rc = this.FindResource("rotationControl") as RotationControl;
+            rc.AngleMill = 0;
+        }
 
-        
+        private void handle_zoomIn(object sender, ExecutedRoutedEventArgs e)
+        {
+            ScaleControl sc = this.FindResource("scaleControl") as ScaleControl;
+            sc.Scale = sc.Scale + 0.05;
+        }
 
+        private void handle_zoomOut(object sender, ExecutedRoutedEventArgs e)
+        {
+            ScaleControl sc = this.FindResource("scaleControl") as ScaleControl;
+            sc.Scale = sc.Scale - 0.05;
+        }
 
-        
+        private void handle_zoomReset(object sender, ExecutedRoutedEventArgs e)
+        {
+            ScaleControl sc = this.FindResource("scaleControl") as ScaleControl;
+            sc.Scale = sc.ScaleDefault;
+        }
 
     }
 
