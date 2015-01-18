@@ -34,6 +34,8 @@ namespace PlottingBoard
             this.colorBrushes = buildBrushDict();
 
             drawGridLines(GridCanvas, Brushes.LightGreen, 120, true, 10);
+
+            drawRangeLabels(GridCanvas, Brushes.LightGreen, 12, 500);
         }
 
         private Dictionary<MarkColors, Brush> buildBrushDict() 
@@ -101,6 +103,79 @@ namespace PlottingBoard
                 canvas.Children.Add(l);
             }
 
+        }
+
+        private void drawRangeLabels(Canvas canvas, Brush brush, int indexCount, int indexDistance)
+        {
+            // alias canvas size
+            double w = canvas.Width;
+            double h = canvas.Height;
+
+            double centerX = w / 2;
+            double centerY = h / 2;
+
+            // vertical gap between labels
+            double gap = h / indexCount;
+            
+            // central axis
+            for (int i = 1; i < (indexCount / 2); i += 1)
+            {
+                // where
+                double yAbove = centerY - i * gap;
+                double yBelow = centerY + i * gap;
+                // content
+                string text = String.Format("{0:D}", i * indexDistance);
+                // create labels and add to canvas
+                canvas.Children.Add(makeGridLabel(text, brush, centerX, yAbove));
+                canvas.Children.Add(makeGridLabel(text, brush, centerX, yBelow));
+            }
+
+            // secondary / off to side axis
+            double xpos = centerX - gap * 1.5;
+            
+            for (int i = 1; i < indexCount; i += 1)
+            {
+                double ypos = h - (gap * i);
+                string text = String.Format("{0:D}", i * indexDistance);
+
+                canvas.Children.Add(makeGridLabel(text, brush, xpos, ypos));
+            }
+        }
+
+        private Label makeGridLabel(String text, Brush color, double x, double y)
+        {
+            Label l = new Label();
+            
+            l.Content = text;
+
+            l.BorderBrush = color;
+            l.BorderThickness = new Thickness(1.0);
+
+            l.Foreground = color;
+            l.Background = SystemColors.WindowBrush;
+
+            l.VerticalAlignment = VerticalAlignment.Center;
+            l.HorizontalAlignment = HorizontalAlignment.Center;
+
+            l.HorizontalContentAlignment = HorizontalAlignment.Center;
+            l.VerticalContentAlignment = VerticalAlignment.Center;
+
+            l.Width = 50;
+            l.Height = 20;
+
+            l.Padding = new Thickness(0);
+
+            l.FontSize = 13;
+
+            setPositionInCanvas(l, new Point(x, y));
+
+            return l;
+        }
+
+        private static void setPositionInCanvas(FrameworkElement e, Point p)
+        {
+            Canvas.SetTop(e, p.Y - (e.Height / 2));
+            Canvas.SetLeft(e, p.X - (e.Width / 2));
         }
 
 
@@ -221,8 +296,7 @@ namespace PlottingBoard
 
         private static void setMarkerPosition(Ellipse e, Point p)
         {
-            Canvas.SetTop(e, p.Y - (e.Height / 2));
-            Canvas.SetLeft(e, p.X - (e.Width / 2));
+            setPositionInCanvas(e, p);
         }
 
         private Ellipse buildMarker(MarkColors color)
