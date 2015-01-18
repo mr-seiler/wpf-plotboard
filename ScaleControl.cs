@@ -8,6 +8,10 @@ using System.Windows.Input;
 
 namespace PlottingBoard
 {
+    /// <summary>
+    /// Class with a Scale property for UI elements to bind to;
+    /// used to control the scale of the main window area and provide a basic form of "zoom"
+    /// </summary>
     public class ScaleControl : INotifyPropertyChanged
     {
 
@@ -16,6 +20,9 @@ namespace PlottingBoard
                        _scaleMax = 2.5,
                        _scale = 0.9;
 
+        /// <summary>
+        /// Used to reset the scale to its starting value
+        /// </summary>
         public double ScaleDefault
         {
             get
@@ -32,6 +39,9 @@ namespace PlottingBoard
             }
         }
 
+        /// <summary>
+        /// Provides a minimum value for validation and sliders and such
+        /// </summary>
         public double ScaleMin
         {
             get
@@ -48,6 +58,9 @@ namespace PlottingBoard
             }
         }
 
+        /// <summary>
+        /// Provides a maximum value for validation and sliders and such
+        /// </summary>
         public double ScaleMax
         {
             get
@@ -64,6 +77,9 @@ namespace PlottingBoard
             }
         }
 
+        /// <summary>
+        /// Scaling factor, relatively near to 1.0
+        /// </summary>
         public double Scale
         {
             get

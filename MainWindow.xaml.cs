@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 
 namespace PlottingBoard
 {
+    // enumeration defining possible marker colors
     public enum MarkColors { RED, GREEN, BLUE, YELLOW, MAGENTA, GRAY };
 
     /// <summary>
@@ -23,6 +24,7 @@ namespace PlottingBoard
     /// </summary>
     public partial class MainWindow : Window
     {
+        // maps color enumeration to static brush resources
         private Dictionary<MarkColors, Brush> colorBrushes;
         
         public MainWindow()
@@ -52,6 +54,15 @@ namespace PlottingBoard
             return brushes;
         }
 
+        /// <summary>
+        /// Used to draw grid lines on the canvas behind the azimuth disk.
+        /// Relies on the canvas having a static Width and Height! (Gross.)
+        /// </summary>
+        /// <param name="canvas">The canvas to draw lines on</param>
+        /// <param name="brush">Brush used to color the lines</param>
+        /// <param name="numLines">Number of lines to put on the canvas</param>
+        /// <param name="indexLines">Whether or not for the lines at an interval to be darker/wider</param>
+        /// <param name="indexInterval">Interval for index lines</param>
         private void drawGridLines(Canvas canvas, Brush brush, int numLines, bool indexLines, int indexInterval)
         {
             // alias canvas size
@@ -105,6 +116,15 @@ namespace PlottingBoard
 
         }
 
+        /// <summary>
+        /// Used to add range labels to the canvas behind the azimuth disk.
+        /// Again, relies on the canvas having a static width and height. (Still ew.)
+        /// </summary>
+        /// <param name="canvas">Canvas to draw on</param>
+        /// <param name="brush">Brush to use for the Label foreground and border</param>
+        /// <param name="indexCount">How many index lines are on the canvas? (numLines / indexInterval)</param>
+        /// <param name="indexDistance">Labelled distance will be a multiple of this number; how much
+        /// real-world distance is between each index line on the grid</param>
         private void drawRangeLabels(Canvas canvas, Brush brush, int indexCount, int indexDistance)
         {
             // alias canvas size
@@ -142,7 +162,15 @@ namespace PlottingBoard
             }
         }
 
-        private Label makeGridLabel(String text, Brush color, double x, double y)
+        /// <summary>
+        /// Creates a grid label to add to the canvas
+        /// </summary>
+        /// <param name="text">Text for the label</param>
+        /// <param name="color">Brush used to draw the foreground (text color) and border</param>
+        /// <param name="x">X position, relative to canvas</param>
+        /// <param name="y">Y position, relative to canvas</param>
+        /// <returns></returns>
+        private static Label makeGridLabel(String text, Brush color, double x, double y)
         {
             Label l = new Label();
             
@@ -172,6 +200,11 @@ namespace PlottingBoard
             return l;
         }
 
+        /// <summary>
+        /// Sets the Canvas.Top and Canvas.Left properties of a FrameworkElement using the given coordinates.
+        /// </summary>
+        /// <param name="e">FrameworkElement to change position of</param>
+        /// <param name="p">Point to use; x -> left, y -> right</param>
         private static void setPositionInCanvas(FrameworkElement e, Point p)
         {
             Canvas.SetTop(e, p.Y - (e.Height / 2));
@@ -179,7 +212,7 @@ namespace PlottingBoard
         }
 
 
-        /* Drag and drop markers */
+        /* Drag and drop marker handlers and factories */
 
         private void RedMarkBtn_MouseMove(object sender, MouseEventArgs e)
         {
@@ -294,27 +327,32 @@ namespace PlottingBoard
             }
         }
 
+        /// <summary>
+        /// Alias to setPositionInCanvas()
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="p"></param>
         private static void setMarkerPosition(Ellipse e, Point p)
         {
             setPositionInCanvas(e, p);
         }
 
+        /// <summary>
+        /// Builds an ellipse to use as a marker on the canvas
+        /// </summary>
+        /// <param name="color">Member of the MarkColors enumeration</param>
+        /// <returns>Ellipse, static size and specified color</returns>
         private Ellipse buildMarker(MarkColors color)
         {
             Ellipse mark = new Ellipse();
-
             // set size
             mark.Width = mark.Height = 12;
-
             // set fill color
             mark.Fill = colorBrushes[color];
-
             // center mark on drop coordinates
             mark.RenderTransformOrigin = new Point(0.5, 0.5);
-
             // add event handler so that markers can be click-n-dragged
             mark.AddHandler(Ellipse.MouseMoveEvent, new MouseEventHandler(Marker_MouseMove));
-
             return mark;
         }
 
@@ -324,7 +362,7 @@ namespace PlottingBoard
         }
 
 
-        /* Hotkeys and such */
+        /* Register and handle hotkeys */
 
         private void setupHotkeys()
         {
@@ -349,31 +387,31 @@ namespace PlottingBoard
         private void handle_decreaseAngle(object sender, ExecutedRoutedEventArgs e)
         {
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
-            rc.AngleMill = rc.AngleMill - 1;
+            rc.AngleMil = rc.AngleMil - 1;
         }
 
         private void handle_decreaseAngleMore(object sender, ExecutedRoutedEventArgs e)
         {
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
-            rc.AngleMill = rc.AngleMill - 20;
+            rc.AngleMil = rc.AngleMil - 20;
         }
 
         private void handle_increaseAngle(object sender, ExecutedRoutedEventArgs e)
         {
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
-            rc.AngleMill = rc.AngleMill + 1;
+            rc.AngleMil = rc.AngleMil + 1;
         }
 
         private void handle_increaseAngleMore(object sender, ExecutedRoutedEventArgs e)
         {
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
-            rc.AngleMill = rc.AngleMill + 20;
+            rc.AngleMil = rc.AngleMil + 20;
         }
 
         private void handle_resetAngle(object sender, ExecutedRoutedEventArgs e)
         {
             RotationControl rc = this.FindResource("rotationControl") as RotationControl;
-            rc.AngleMill = 0;
+            rc.AngleMil = 0;
         }
 
         private void handle_zoomIn(object sender, ExecutedRoutedEventArgs e)

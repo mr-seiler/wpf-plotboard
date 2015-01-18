@@ -8,14 +8,14 @@
         Title="Plotting Board-ish" ResizeMode="CanResizeWithGrip" MinHeight="600" MinWidth="800" WindowStartupLocation="CenterScreen" SizeToContent="Width" Height="827" Width="1177">
     <Window.Resources>
         <!-- To convert m2d in data binding -->
-        <local:MillToDegConverter x:Key="MillToDegConverter"/>
+        <local:MilToDegConverter x:Key="MilToDegConverter"/>
         <!-- Shared angle data source -->
-        <local:RotationControl x:Key="rotationControl"/>
+        <local:RotationControl x:Key="RotationControl"/>
         <!-- shared scale data source -->
-        <local:ScaleControl x:Key="scaleControl"/>
+        <local:ScaleControl x:Key="ScaleControl"/>
         <!-- image resources -->
-        <BitmapImage x:Key="protractor" UriSource="./img/protractor.png"/>
-        <BitmapImage x:Key="vernier" UriSource="./img/vernier.png"/>
+        <BitmapImage x:Key="AzimuthDisk" UriSource="./img/azimuth.png"/>
+        <BitmapImage x:Key="VernierScale" UriSource="./img/vernier.png"/>
         <!-- color definitions -->
         <Color x:Key="color-red">#dc322f</Color>
         <Color x:Key="color-green">#859900</Color>
@@ -27,7 +27,7 @@
         <SolidColorBrush x:Key="brush-red" Color="{StaticResource color-red}"/>
         <SolidColorBrush x:Key="brush-green" Color="{StaticResource color-green}"/>
         <SolidColorBrush x:Key="brush-blue" Color="{StaticResource color-blue}"/>
-        <SolidColorBrush x:Key="brush-yellow" Color="{DynamicResource color-yellow}"/>
+        <SolidColorBrush x:Key="brush-yellow" Color="{StaticResource color-yellow}"/>
         <SolidColorBrush x:Key="brush-magenta" Color="{StaticResource color-magenta}"/>
         <SolidColorBrush x:Key="brush-gray" Color="{StaticResource color-gray}"/>
     </Window.Resources>
@@ -39,25 +39,28 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <GroupBox x:Name="AngleControlGroup" Header="Angle Control" Grid.Row="0">
+            <!-- sidebar area for controlling rotation of azimuth disk -->
+            <GroupBox x:Name="AngleControlGroup" Header="Rotation" Grid.Row="0">
                 <GroupBox.DataContext>
-                    <Binding Source="{StaticResource rotationControl}" />
+                    <Binding Source="{StaticResource RotationControl}" />
                 </GroupBox.DataContext>
                 <Grid>
-                    <Slider x:Name="MillSlider" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="140" Value="{Binding AngleMill}" Maximum="6400" LargeChange="10" SmallChange="1" TickFrequency="100"/>
-                    <TextBox x:Name="MillText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, StringFormat=#0}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,9,0,10"/>
-                    <TextBox x:Name="DegText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, StringFormat=0.00}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,40,0,10"/>
+                    <Slider x:Name="MillSlider" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="140" Value="{Binding AngleMil}" Maximum="6400" LargeChange="10" SmallChange="1" TickFrequency="100"/>
+                    <TextBox x:Name="MillText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMil, StringFormat=#0, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,9,0,10"/>
+                    <TextBox x:Name="DegText" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding AngleMil, Converter={StaticResource MilToDegConverter}, StringFormat=0.00, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="45" MaxLength="6" RenderTransformOrigin="0.327,0.348" Margin="155,40,0,10"/>
                     <Label Content="mil" Margin="205,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="17" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                     <Label Content="°" Margin="205,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="13" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                 </Grid>
             </GroupBox>
-            <GroupBox x:Name="ScaleControlGroup" Header="Scale Control" Grid.Row="1" VerticalAlignment="Top">
+            <!-- sidebar area for controlling scale (zoom) of main grid/azimuth disk area -->
+            <GroupBox x:Name="ScaleControlGroup" Header="Scale" Grid.Row="1" VerticalAlignment="Top">
                 <Grid>
-                    <Slider x:Name="ScaleSlider" SmallChange="0.01" Maximum="{Binding ScaleMax, Source={StaticResource scaleControl}}" Minimum="{Binding ScaleMin, Source={StaticResource scaleControl}}" Value="{Binding Scale, Source={StaticResource scaleControl}}" VerticalAlignment="Top" Margin="10" Width="140" HorizontalAlignment="Left" TickFrequency="0.5" />
+                    <Slider x:Name="ScaleSlider" SmallChange="0.01" Maximum="{Binding ScaleMax, Source={StaticResource ScaleControl}}" Minimum="{Binding ScaleMin, Source={StaticResource ScaleControl}}" Value="{Binding Scale, Source={StaticResource ScaleControl}}" VerticalAlignment="Top" Margin="10" Width="140" HorizontalAlignment="Left" TickFrequency="0.5" />
                     <TextBox x:Name="ScaleText" HorizontalAlignment="Left" Height="24" Margin="155,10,0,10" TextWrapping="Wrap" Text="{Binding Value, ElementName=ScaleSlider, Mode=OneWay, StringFormat=\{0:P\}}" VerticalAlignment="Center" Width="45" IsReadOnly="True" IsEnabled="False"/>
                     <Label Content="%" Margin="205,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="13" Padding="0,2,0,0" VerticalContentAlignment="Center" Height="22"/>
                 </Grid>
             </GroupBox>
+            <!-- sidebar area for adding and removing markers -->
             <GroupBox x:Name="MarkerSourceGroup" Header="Markers" Grid.Row="2" VerticalAlignment="Top">
                 <StackPanel x:Name="MarkerSourceStack" DragEnter="MarkerSourceStack_DragEnter" Drop="MarkerSourceStack_Drop" AllowDrop="True">
                     <Border Margin="10,10,10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
@@ -92,14 +95,14 @@
                     </Border>
                     <Border Margin="10,5" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" CornerRadius="5">
                         <WrapPanel x:Name="GrayMarkBtn" ClipToBounds="True"  MouseMove="GrayMarkBtn_MouseMove" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Margin="3">
-                            <Ellipse Fill="{DynamicResource brush-gray}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"></Ellipse>
-                            <Label Content="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
+                            <Ellipse Fill="{DynamicResource brush-gray}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="24" MinHeight="24" MaxWidth="36" MaxHeight="36" Margin="5,0,0,0"/>  
+                            <Label x:Name="label" Content="Gray" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="14"></Label>
                         </WrapPanel>
                     </Border>
                     <Button x:Name="ClearAllBtn" Content="Clear All Markers" HorizontalAlignment="Center" Margin="10,5,10,10" Click="ClearAllBtn_Click" Padding="5,3"/>
                 </StackPanel>
             </GroupBox>
-            
+
         </Grid>
         <!-- the main window area, containing the azimuth disk and marker canvas, etc. -->
         <ScrollViewer x:Name="DockScrollArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
@@ -113,31 +116,34 @@
                     </TransformGroup>
                 </Grid.LayoutTransform>
                 <!-- vernier scale here, zindex set to appear on top of the grid lines and azimuth disk -->
-                <Image x:Name="VernierScale" Source="{StaticResource vernier}" Width="150" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0" Panel.ZIndex="1"/>
+                <Image x:Name="VernierScale" Source="{StaticResource VernierScale}" Width="150" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0" Panel.ZIndex="1"/>
                 <!-- nested grid contains the grid lines, azimuth disk, and marker canvas -->
                 <Grid x:Name="RotatorGrid" Margin="0,54,0,0" VerticalAlignment="Top">
                     <Border Name="circlemask" Background="White" CornerRadius="640" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}" />
+                    <!-- gridlines and labels are added to this canvas programmatically -->
                     <Canvas x:Name="GridCanvas" Grid.Column="1" Width="1280" Height="1280">
                         <Canvas.OpacityMask>
                             <VisualBrush Visual="{Binding ElementName=circlemask}"/>
                         </Canvas.OpacityMask>
                     </Canvas>
-                    <Image x:Name="MillDisk" Source="{StaticResource protractor}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}">
+                    <!-- azimuth disk image w/ rotation -->
+                    <Image x:Name="AzimuthDisk" Source="{StaticResource AzimuthDisk}" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Margin="7,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Width, ElementName=GridCanvas}" Height="{Binding Height, ElementName=GridCanvas}">
                         <Image.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
                                 <SkewTransform/>
-                                <RotateTransform Angle="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, Source={StaticResource rotationControl}}"/>
+                                <RotateTransform Angle="{Binding AngleMil, Converter={StaticResource MilToDegConverter}, Source={StaticResource RotationControl}}"/>
                                 <TranslateTransform/>
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
+                    <!-- canvas for drag-and-drop markers, rotates with the azimuth disk -->
                     <Canvas x:Name="MarkerArea" AllowDrop="True" DragEnter="MarkerArea_DragEnter" Drop="MarkerArea_Drop" Background="#01000000" Width="{Binding Width, ElementName=GridCanvas, Mode=OneWay}" Height="{Binding Height, ElementName=GridCanvas, Mode=OneWay}" RenderTransformOrigin="0.5,0.5" >
                         <Canvas.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
                                 <SkewTransform/>
-                                <RotateTransform Angle="{Binding AngleMill, Converter={StaticResource MillToDegConverter}, Source={StaticResource rotationControl}}"/>
+                                <RotateTransform Angle="{Binding AngleMil, Converter={StaticResource MilToDegConverter}, Source={StaticResource RotationControl}}"/>
                                 <TranslateTransform/>
                             </TransformGroup>
                         </Canvas.RenderTransform>
