@@ -32,3 +32,7 @@ Marker can be placed on the azimuth disk by dragging a color from the "Markers" 
 - **[Enhancement]** Proper CustomControl/UserControls extending Canvas for the grid and marker areas
 - **[Enhancement]** Actual toolbar (maybe?)
 - Learn how to use WPF "the right way" instead of just hacking at it
+
+### Credits
+
+- App Icon: http://icons8.com/
